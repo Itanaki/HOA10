@@ -1,0 +1,32 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+    
+  - name: Update and upgrade remote CentOS server
+    yum:
+      update_cache: yes
+      name:  "*"
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: CentOS
+  tags: CentOS
+  become: true
+  roles:
+    - CentOS_elastic
+
+- hosts: Ubuntu
+  become: true
+  tags: Ubuntu
+  roles:
+    - Ubuntu_elastic
